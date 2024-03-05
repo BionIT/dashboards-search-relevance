@@ -129,6 +129,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
                fullWidth={false}
                removePrepend={true}
                compressed={false}
+               defaultOption={[]}
             />
             </EuiFormRow>
           <EuiFormRow
