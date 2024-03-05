@@ -20,14 +20,16 @@ import {
 } from '../../../types/index';
 import { ResultComponents } from './result_components/result_components';
 import { useSearchRelevanceContext } from '../../../contexts';
+import { DataSourceManagementPluginSetup } from '../../../../../../src/plugins/data_source_management/public';
 
 const DEFAULT_QUERY = '{}';
 
 interface SearchResultProps {
   http: CoreStart['http'];
+  dataSourceManagement: DataSourceManagementPluginSetup;
 }
 
-export const SearchResult = ({ http }: SearchResultProps) => {
+export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) => {
   const [queryString1, setQueryString1] = useState(DEFAULT_QUERY);
   const [queryString2, setQueryString2] = useState(DEFAULT_QUERY);
   const [queryResult1, setQueryResult1] = useState<SearchResults>({} as any);
@@ -183,6 +185,7 @@ export const SearchResult = ({ http }: SearchResultProps) => {
           queryError2={queryError2}
           setQueryError1={setQueryError1}
           setQueryError2={setQueryError2}
+          dataSourceManagement={dataSourceManagement}
         />
         <ResultComponents
           queryResult1={queryResult1}

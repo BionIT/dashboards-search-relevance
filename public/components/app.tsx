@@ -13,12 +13,14 @@ import { NavigationPublicPluginStart } from '../../../../src/plugins/navigation/
 import { Home as QueryCompareHome } from './query_compare/home';
 import { PLUGIN_NAME } from '../../common';
 import { SearchRelevanceContextProvider } from '../contexts';
+import { DataSourceManagementPluginSetup } from '../../../../src/plugins/data_source_management/public';
 
 interface SearchRelevanceAppDeps {
   notifications: CoreStart['notifications'];
   http: CoreStart['http'];
   navigation: NavigationPublicPluginStart;
   chrome: CoreStart['chrome'];
+  dataSourceManagement: DataSourceManagementPluginSetup;
 }
 
 export const SearchRelevanceApp = ({
@@ -26,6 +28,7 @@ export const SearchRelevanceApp = ({
   http,
   navigation,
   chrome,
+  dataSourceManagement,
 }: SearchRelevanceAppDeps) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [toastRightSide, setToastRightSide] = useState<boolean>(true);
@@ -64,6 +67,7 @@ export const SearchRelevanceApp = ({
                       setBreadcrumbs={chrome.setBreadcrumbs}
                       setToast={setToast}
                       chrome={chrome}
+                      dataSourceManagement={dataSourceManagement}
                     />
                   );
                 }}

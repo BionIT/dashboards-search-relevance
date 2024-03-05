@@ -15,6 +15,7 @@ import { ServiceEndpoints } from '../../../common';
 import { Flyout } from '../common/flyout';
 
 import './home.scss';
+import { DataSourceManagementPluginSetup } from '../../../../../src/plugins/data_source_management/public';
 
 interface QueryExplorerProps {
   parentBreadCrumbs: ChromeBreadcrumb[];
@@ -24,6 +25,7 @@ interface QueryExplorerProps {
   setBreadcrumbs: (newBreadcrumbs: ChromeBreadcrumb[]) => void;
   setToast: (title: string, color?: string, text?: any, side?: string) => void;
   chrome: CoreStart['chrome'];
+  dataSourceManagement: DataSourceManagementPluginSetup;
 }
 export const Home = ({
   parentBreadCrumbs,
@@ -33,6 +35,7 @@ export const Home = ({
   setBreadcrumbs,
   setToast,
   chrome,
+  dataSourceManagement,
 }: QueryExplorerProps) => {
   const {
     documentsIndexes,
@@ -59,7 +62,7 @@ export const Home = ({
   return (
     <>
       <div className="osdOverviewWrapper">
-        {documentsIndexes.length ? <SearchResult http={http} /> : <CreateIndex />}
+        {documentsIndexes.length ? <SearchResult http={http} dataSourceManagement={dataSourceManagement}/> : <CreateIndex />}
       </div>
       {showFlyout && <Flyout />}
     </>

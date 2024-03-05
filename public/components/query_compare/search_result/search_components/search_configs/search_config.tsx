@@ -19,6 +19,7 @@ import {
 
 import { useSearchRelevanceContext } from '../../../../../contexts';
 import { QueryError, QueryStringError, SelectIndexError } from '../../../../../types/index';
+import { DataSourceManagementPluginSetup } from '../../../../../../../../src/plugins/data_source_management/public';
 
 interface SearchConfigProps {
   queryNumber: 1 | 2;
@@ -30,6 +31,7 @@ interface SearchConfigProps {
   setQueryError: React.Dispatch<React.SetStateAction<QueryError>>;
   pipeline: string;
   setPipeline: React.Dispatch<React.SetStateAction<string>>;
+  dataSourceManagement: DataSourceManagementPluginSetup;
 }
 
 export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
@@ -42,6 +44,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
   setQueryError,
   pipeline,
   setPipeline,
+  dataSourceManagement,
 }) => {
   const { documentsIndexes, pipelines, setShowFlyout } = useSearchRelevanceContext();
   // On select index
@@ -111,6 +114,23 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
       <EuiSpacer size="m" />
       <EuiFlexGroup>
         <EuiFlexItem>
+        <EuiFormRow
+            fullWidth
+            label="Data source"
+            error={!!queryError.selectIndex.length && <span>{queryError.selectIndex}</span>}
+            isInvalid={!!queryError.selectIndex.length}
+          >
+            <dataSourceManagement.getDataSourcePicker 
+               savedObjectsClient={undefined}
+               notifications={undefined} 
+               onSelectedDataSource={() => console.log("hey")}
+               disabled={false} 
+               hideLocalCluster={false} 
+               fullWidth={false}
+               removePrepend={true}
+               compressed={false}
+            />
+            </EuiFormRow>
           <EuiFormRow
             fullWidth
             label="Index"

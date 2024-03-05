@@ -8,11 +8,13 @@ import ReactDOM from 'react-dom';
 import { AppMountParameters, CoreStart } from '../../../src/core/public';
 import { AppPluginStartDependencies } from './types';
 import { SearchRelevanceApp } from './components/app';
+import { DataSourceManagementPluginSetup } from '../../../src/plugins/data_source_management/public';
 
 export const renderApp = (
   { notifications, http, chrome }: CoreStart,
   { navigation }: AppPluginStartDependencies,
-  { element }: AppMountParameters
+  { element }: AppMountParameters,
+  dataSourceManagement: DataSourceManagementPluginSetup
 ) => {
   ReactDOM.render(
     <SearchRelevanceApp
@@ -20,6 +22,7 @@ export const renderApp = (
       http={http}
       navigation={navigation}
       chrome={chrome}
+      dataSourceManagement={dataSourceManagement}
     />,
     element
   );

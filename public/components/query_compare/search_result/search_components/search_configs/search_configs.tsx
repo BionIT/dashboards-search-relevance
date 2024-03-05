@@ -12,6 +12,7 @@ import { useSearchRelevanceContext } from '../../../../../contexts';
 
 import './search_configs.scss';
 import { QueryError } from '../../../../../../public/types/index';
+import { DataSourceManagementPluginSetup } from '../../../../../../../../src/plugins/data_source_management/public';
 
 interface SearchConfigsPanelProps {
   queryString1: string;
@@ -22,6 +23,7 @@ interface SearchConfigsPanelProps {
   queryError2: QueryError;
   setQueryError1: React.Dispatch<React.SetStateAction<QueryError>>;
   setQueryError2: React.Dispatch<React.SetStateAction<QueryError>>;
+  dataSourceManagement: DataSourceManagementPluginSetup;
 }
 
 export const SearchConfigsPanel = ({
@@ -33,6 +35,7 @@ export const SearchConfigsPanel = ({
   queryError2,
   setQueryError1,
   setQueryError2,
+  dataSourceManagement,
 }: SearchConfigsPanelProps) => {
   const {
     selectedIndex1,
@@ -65,6 +68,7 @@ export const SearchConfigsPanel = ({
             setQueryError={setQueryError1}
             pipeline={pipeline1}
             setPipeline={setPipeline1}
+            dataSourceManagement={dataSourceManagement}
           />
         </EuiFlexItem>
         <EuiFlexItem className="search-relevance-config">
@@ -78,6 +82,7 @@ export const SearchConfigsPanel = ({
             setQueryError={setQueryError2}
             pipeline={pipeline2}
             setPipeline={setPipeline2}
+            dataSourceManagement={dataSourceManagement}
           />
         </EuiFlexItem>
       </EuiFlexGroup>
