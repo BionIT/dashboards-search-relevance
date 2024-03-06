@@ -89,7 +89,8 @@ export const Home = ({
     showSaveQuery={false}
     showQueryInput={false}
     showDataSourcePicker={true}
-    dataSourceCallBackFunc={(e) => console.log(e)}
+    dataSourceCallBackFunc={(id) => console.log(id)}
+    disableDataSourcePicker={false}
   />
       <div className="osdOverviewWrapper">
         {documentsIndexes1.length || documentsIndexes2.length ? <SearchResult http={http} dataSourceManagement={dataSourceManagement} savedObjects={savedObjects} notifications={notifications} navigation={navigation} setActionMenu={setActionMenu}/> : <CreateIndex />}
