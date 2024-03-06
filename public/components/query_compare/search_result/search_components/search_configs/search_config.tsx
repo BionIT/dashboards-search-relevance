@@ -20,6 +20,20 @@ import {
 import { useSearchRelevanceContext } from '../../../../../contexts';
 import { QueryError, QueryStringError, SelectIndexError } from '../../../../../types/index';
 import { DataSourceManagementPluginSetup } from '../../../../../../../../src/plugins/data_source_management/public';
+import { AppMountParameters, CoreStart, MountPoint, ToastsStart } from '../../../../../../../../src/core/public';
+import { NavigationPublicPluginStart } from '../../../../../../../../src/plugins/navigation/public';
+
+export interface SearchRelevanceServices extends CoreStart {
+  setHeaderActionMenu: AppMountParameters['setHeaderActionMenu'];
+  appBasePath: AppMountParameters['history'];
+  element: AppMountParameters['element'];
+  navigation: NavigationPublicPluginStart;
+  toastNotifications: ToastsStart;
+  history: AppMountParameters['history'];
+  overlays: CoreStart['overlays'];
+  chrome: CoreStart['chrome'];
+  uiSettings: CoreStart['uiSettings'];
+}
 
 interface SearchConfigProps {
   queryNumber: 1 | 2;
@@ -32,6 +46,12 @@ interface SearchConfigProps {
   pipeline: string;
   setPipeline: React.Dispatch<React.SetStateAction<string>>;
   dataSourceManagement: DataSourceManagementPluginSetup;
+  setSelectedDataSource: React.Dispatch<React.SetStateAction<string>>; 
+  selectedDataSource: string;
+  savedObjects: CoreStart['savedObjects'];
+  notifications: CoreStart['notifications'];
+  navigation: NavigationPublicPluginStart;
+  setActionMenu: (menuMount: MountPoint | undefined) => void;
 }
 
 export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
@@ -45,8 +65,14 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
   pipeline,
   setPipeline,
   dataSourceManagement,
+  setSelectedDataSource,
+  selectedDataSource,
+  savedObjects,
+  notifications,
+  navigation,
+  setActionMenu,
 }) => {
-  const { documentsIndexes, pipelines, setShowFlyout } = useSearchRelevanceContext();
+  const { documentsIndexes1, pipelines1, documentsIndexes2, pipelines2, setShowFlyout } = useSearchRelevanceContext();
   // On select index
   const onChangeSelectedIndex: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     setSelectedIndex(e.target.value);
@@ -57,8 +83,14 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
     }));
   };
 
+  const onSelectedDataSource = (e) => {
+    console.log("inside selected data source", e)
+    const dataSourceId = e[0] ? e[0].id : undefined;
+    setSelectedDataSource(dataSourceId);
+  }
+
   // Sort search pipelines based off of each individual pipeline name.
-  const sortedPipelines = [...Object.keys(pipelines)]
+  const sortedPipelines = [...Object.keys(pipelines1)]
     .sort((a, b) => a.localeCompare(b))
     .map((searchPipeline) => ({
       label: searchPipeline,
@@ -106,6 +138,8 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
     }
   };
 
+
+
   return (
     <>
       <EuiTitle size="xs">
@@ -121,17 +155,19 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
             isInvalid={!!queryError.selectIndex.length}
           >
             <dataSourceManagement.getDataSourcePicker 
-               savedObjectsClient={undefined}
-               notifications={undefined} 
-               onSelectedDataSource={() => console.log("hey")}
+               savedObjectsClient={savedObjects.client}
+               notifications={notifications.toasts} 
+               onSelectedDataSource={onSelectedDataSource}
                disabled={false} 
                hideLocalCluster={false} 
                fullWidth={false}
-               removePrepend={true}
-               compressed={false}
-               defaultOption={[]}
+              //  removePrepend={true}
+              //  compressed={false}
+              //  defaultOption={[]}
             />
             </EuiFormRow>
+            </EuiFlexItem>
+            <EuiFlexItem>
           <EuiFormRow
             fullWidth
             label="Index"
@@ -140,7 +176,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
           >
             <EuiSelect
               hasNoInitialSelection={true}
-              options={documentsIndexes.map(({ index }) => ({
+              options={documentsIndexes1.map(({ index }) => ({
                 value: index,
                 text: index,
               }))}

@@ -8,7 +8,7 @@ import { I18nProvider } from '@osd/i18n/react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { useState } from 'react';
 import { EuiGlobalToastList } from '@elastic/eui';
-import { CoreStart, Toast } from '../../../../src/core/public';
+import { CoreStart, MountPoint, Toast } from '../../../../src/core/public';
 import { NavigationPublicPluginStart } from '../../../../src/plugins/navigation/public';
 import { Home as QueryCompareHome } from './query_compare/home';
 import { PLUGIN_NAME } from '../../common';
@@ -21,6 +21,8 @@ interface SearchRelevanceAppDeps {
   navigation: NavigationPublicPluginStart;
   chrome: CoreStart['chrome'];
   dataSourceManagement: DataSourceManagementPluginSetup;
+  savedObjects: CoreStart['savedObjects'];
+  setActionMenu: (menuMount: MountPoint | undefined) => void;
 }
 
 export const SearchRelevanceApp = ({
@@ -29,6 +31,8 @@ export const SearchRelevanceApp = ({
   navigation,
   chrome,
   dataSourceManagement,
+  savedObjects,
+  setActionMenu,
 }: SearchRelevanceAppDeps) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [toastRightSide, setToastRightSide] = useState<boolean>(true);
@@ -68,6 +72,8 @@ export const SearchRelevanceApp = ({
                       setToast={setToast}
                       chrome={chrome}
                       dataSourceManagement={dataSourceManagement}
+                      savedObjects={savedObjects}
+                      setActionMenu={setActionMenu}
                     />
                   );
                 }}

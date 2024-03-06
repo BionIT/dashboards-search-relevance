@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { EuiPageContentBody } from '@elastic/eui';
 
-import { CoreStart } from '../../../../../../src/core/public';
+import { CoreStart, MountPoint } from '../../../../../../src/core/public';
 import { SearchConfigsPanel } from './search_components/search_configs/search_configs';
 import { SearchInputBar } from './search_components/search_bar';
 import { ServiceEndpoints } from '../../../../common';
@@ -21,15 +21,20 @@ import {
 import { ResultComponents } from './result_components/result_components';
 import { useSearchRelevanceContext } from '../../../contexts';
 import { DataSourceManagementPluginSetup } from '../../../../../../src/plugins/data_source_management/public';
+import { NavigationPublicPluginStart } from '../../../../../../src/plugins/navigation/public';
 
 const DEFAULT_QUERY = '{}';
 
 interface SearchResultProps {
   http: CoreStart['http'];
   dataSourceManagement: DataSourceManagementPluginSetup;
+  savedObjects: CoreStart['savedObjects'];
+  notifications: CoreStart['notifications'];
+  navigation: NavigationPublicPluginStart;
+  setActionMenu: (menuMount: MountPoint | undefined) => void;
 }
 
-export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) => {
+export const SearchResult = ({ http, dataSourceManagement, savedObjects, notifications, setActionMenu, navigation }: SearchResultProps) => {
   const [queryString1, setQueryString1] = useState(DEFAULT_QUERY);
   const [queryString2, setQueryString2] = useState(DEFAULT_QUERY);
   const [queryResult1, setQueryResult1] = useState<SearchResults>({} as any);
@@ -38,6 +43,7 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
   const [queryError2, setQueryError2] = useState<QueryError>(initialQueryErrorState);
   const [searchBarValue, setSearchBarValue] = useState('');
 
+
   const {
     updateComparedResult1,
     updateComparedResult2,
@@ -45,6 +51,8 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
     selectedIndex2,
     pipeline1,
     pipeline2,
+    selectedDataSource1,
+    selectedDataSource2
   } = useSearchRelevanceContext();
 
   const onClickSearch = () => {
@@ -61,6 +69,8 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
     jsonQueries[1] = rewriteQuery(searchBarValue, queryString2, queryErrors[1]);
 
     handleSearch(jsonQueries, queryErrors);
+    console.log("am i here?")
+    console.log(jsonQueries)
   };
 
   const validateQuery = (selectedIndex: string, queryString: string, queryError: QueryError) => {
@@ -77,6 +87,8 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
   };
 
   const rewriteQuery = (value: string, queryString: string, queryError: QueryError) => {
+    console.log("inside rewrite with querystring", queryString)
+    console.log("rewrite",  JSON.parse(queryString.replace(/%SearchText%/g, value)))
     if (queryString.trim().length > 0) {
       try {
         return JSON.parse(queryString.replace(/%SearchText%/g, value));
@@ -90,6 +102,7 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
   const handleQuery = (
     queryError: QueryError,
     selectedIndex: string,
+    selectedDataSource: string,
     pipeline: string,
     jsonQuery: any,
     updateComparedResult: (result: SearchResults) => void,
@@ -111,6 +124,7 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
       query1: handleQuery(
         queryErrors[0],
         selectedIndex1,
+        selectedDataSource1,
         pipeline1,
         jsonQueries[0],
         updateComparedResult1,
@@ -120,6 +134,7 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
       query2: handleQuery(
         queryErrors[1],
         selectedIndex2,
+        selectedDataSource2,
         pipeline2,
         jsonQueries[1],
         updateComparedResult2,
@@ -127,6 +142,8 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
         setQueryError2
       ),
     };
+
+    console.log("inside handle search?")
     if (Object.keys(requestBody).length !== 0) {
       http
         .post(ServiceEndpoints.GetSearchResults, {
@@ -186,6 +203,10 @@ export const SearchResult = ({ http, dataSourceManagement }: SearchResultProps) 
           setQueryError1={setQueryError1}
           setQueryError2={setQueryError2}
           dataSourceManagement={dataSourceManagement}
+          savedObjects={savedObjects}
+          notifications={notifications}
+          navigation={navigation}
+          setActionMenu={setActionMenu}
         />
         <ResultComponents
           queryResult1={queryResult1}

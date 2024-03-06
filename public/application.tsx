@@ -11,9 +11,9 @@ import { SearchRelevanceApp } from './components/app';
 import { DataSourceManagementPluginSetup } from '../../../src/plugins/data_source_management/public';
 
 export const renderApp = (
-  { notifications, http, chrome }: CoreStart,
+  { notifications, http, chrome, savedObjects }: CoreStart,
   { navigation }: AppPluginStartDependencies,
-  { element }: AppMountParameters,
+  { element, setHeaderActionMenu }: AppMountParameters,
   dataSourceManagement: DataSourceManagementPluginSetup
 ) => {
   ReactDOM.render(
@@ -23,6 +23,8 @@ export const renderApp = (
       navigation={navigation}
       chrome={chrome}
       dataSourceManagement={dataSourceManagement}
+      savedObjects={savedObjects}
+      setActionMenu={setHeaderActionMenu}
     />,
     element
   );

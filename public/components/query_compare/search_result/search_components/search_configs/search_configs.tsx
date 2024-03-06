@@ -13,6 +13,8 @@ import { useSearchRelevanceContext } from '../../../../../contexts';
 import './search_configs.scss';
 import { QueryError } from '../../../../../../public/types/index';
 import { DataSourceManagementPluginSetup } from '../../../../../../../../src/plugins/data_source_management/public';
+import { CoreStart, MountPoint } from '../../../../../../../../src/core/public';
+import { NavigationPublicPluginStart } from '../../../../../../../../src/plugins/navigation/public';
 
 interface SearchConfigsPanelProps {
   queryString1: string;
@@ -24,6 +26,10 @@ interface SearchConfigsPanelProps {
   setQueryError1: React.Dispatch<React.SetStateAction<QueryError>>;
   setQueryError2: React.Dispatch<React.SetStateAction<QueryError>>;
   dataSourceManagement: DataSourceManagementPluginSetup;
+  savedObjects: CoreStart['savedObjects'];
+  notifications: CoreStart['notifications'];
+  navigation: NavigationPublicPluginStart;
+  setActionMenu: (menuMount: MountPoint | undefined) => void;
 }
 
 export const SearchConfigsPanel = ({
@@ -36,6 +42,10 @@ export const SearchConfigsPanel = ({
   setQueryError1,
   setQueryError2,
   dataSourceManagement,
+  savedObjects,
+  notifications,
+  setActionMenu,
+  navigation,
 }: SearchConfigsPanelProps) => {
   const {
     selectedIndex1,
@@ -46,6 +56,10 @@ export const SearchConfigsPanel = ({
     setPipeline1,
     pipeline2,
     setPipeline2,
+    selectedDataSource1,
+    setSelectedDataSource1,
+    selectedDataSource2,
+    setSelectedDataSource2,
   } = useSearchRelevanceContext();
 
   return (
@@ -69,6 +83,12 @@ export const SearchConfigsPanel = ({
             pipeline={pipeline1}
             setPipeline={setPipeline1}
             dataSourceManagement={dataSourceManagement}
+            setSelectedDataSource={setSelectedDataSource1}
+            selectedDataSource={selectedDataSource1}
+            savedObjects={savedObjects}
+            notifications={notifications}
+            navigation={navigation}
+            setActionMenu={setActionMenu}
           />
         </EuiFlexItem>
         <EuiFlexItem className="search-relevance-config">
@@ -83,6 +103,12 @@ export const SearchConfigsPanel = ({
             pipeline={pipeline2}
             setPipeline={setPipeline2}
             dataSourceManagement={dataSourceManagement}
+            setSelectedDataSource={setSelectedDataSource2}
+            selectedDataSource={selectedDataSource2}
+            savedObjects={savedObjects}
+            notifications={notifications}
+            navivation={navigation}
+            setActionMenu={setActionMenu}
           />
         </EuiFlexItem>
       </EuiFlexGroup>
