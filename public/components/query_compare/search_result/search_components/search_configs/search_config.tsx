@@ -164,6 +164,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
               //  removePrepend={true}
               //  compressed={false}
               //  defaultOption={[]}
+              //  placeholderText={''}
             />
             </EuiFormRow>
             </EuiFlexItem>
