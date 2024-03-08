@@ -79,16 +79,17 @@ export const Home = ({
   }, [http, setDocumentsIndexes1, setDocumentsIndexes2, setPipelines1, setPipelines2]);
   return (
     <>
-    <navigation.ui.TopNavMenu
+    <dataSourceManagement.ui.DataSourceMenu
     setMenuMountPoint={setActionMenu}
-    showDataSourcePicker={true}
+    showDataSourceSelectable={true}
     dataSourceCallBackFunc={(id, label) => console.log(id, label)}
-    disableDataSourcePicker={true}
+    disableDataSourceSelectable={true}
     savedObjects={savedObjects.client}
     notifications={notifications}
     appName={'searchRelevance'}
     hideLocalCluster={true}
-    defaultOption={[{label: '', id: 'a'}]}
+    selectedOption={[{label: 'data sources', id: 'a'}]}
+    fullWidth={true}
   />
       <div className="osdOverviewWrapper">
         {documentsIndexes1.length || documentsIndexes2.length ? <SearchResult http={http} dataSourceManagement={dataSourceManagement} savedObjects={savedObjects} notifications={notifications} navigation={navigation} setActionMenu={setActionMenu}/> : <CreateIndex />}

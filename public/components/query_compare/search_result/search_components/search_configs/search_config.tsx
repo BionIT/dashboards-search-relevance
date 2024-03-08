@@ -154,17 +154,17 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
             error={!!queryError.selectIndex.length && <span>{queryError.selectIndex}</span>}
             isInvalid={!!queryError.selectIndex.length}
           >
-            <dataSourceManagement.getDataSourcePicker 
+            <dataSourceManagement.ui.DataSourceSelector 
                savedObjectsClient={savedObjects.client}
                notifications={notifications.toasts} 
                onSelectedDataSource={onSelectedDataSource}
                disabled={false} 
                hideLocalCluster={false} 
                fullWidth={false}
-              //  removePrepend={true}
-              //  compressed={false}
-              //  defaultOption={[]}
-              //  placeholderText={''}
+               removePrepend={true}
+               compressed={false}
+               defaultOption={[]}
+               placeholderText={''}
             />
             </EuiFormRow>
             </EuiFlexItem>
