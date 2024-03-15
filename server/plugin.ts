@@ -17,7 +17,7 @@ import {
 import { defineRoutes } from './routes';
 
 import { DataSourcePluginSetup } from '../../../src/plugins/data_source/server/types';
-import { DataSourceManagementPlugin } from '../../../src/plugins/data_source_management/public/plugin';
+import { DataSourceManagementPlugin } from '../../../src/plugins/data_source_management/public';
 import { SearchRelevancePluginConfigType } from '../config';
 import { MetricsService, MetricsServiceSetup } from './metrics/metrics_service';
 import { SearchRelevancePluginSetup, SearchRelevancePluginStart } from './types';
