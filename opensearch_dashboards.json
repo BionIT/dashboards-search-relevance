@@ -7,6 +7,5 @@
   "requiredPlugins": [
     "navigation"
   ],
-  "optionalPlugins": ["dataSource"],
-  "requiredBundles": ["dataSourceManagement"]
+  "optionalPlugins": ["dataSource", "dataSourceManagement"]
 }
