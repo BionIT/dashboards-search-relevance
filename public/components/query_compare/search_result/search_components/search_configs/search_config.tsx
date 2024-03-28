@@ -18,7 +18,7 @@ import {
 import React, { FunctionComponent } from 'react';
 
 import { AppMountParameters, CoreStart, MountPoint, NotificationsStart, SavedObjectsStart, ToastsStart } from '../../../../../../../../src/core/public';
-import { DataSourceManagementPluginSetup, DataSourceSelector } from '../../../../../../../../src/plugins/data_source_management/public';
+import { DataSourceManagementPluginSetup } from '../../../../../../../../src/plugins/data_source_management/public';
 import { NavigationPublicPluginStart } from '../../../../../../../../src/plugins/navigation/public';
 import { useSearchRelevanceContext } from '../../../../../contexts';
 import { QueryError, QueryStringError, SelectIndexError } from '../../../../../types/index';
@@ -142,6 +142,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
     }   
   }
 
+  console.log(dataSourceOptions, "dataSourceOptions");
 
   return (
     <>
@@ -156,7 +157,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
               fullWidth
               label="Data Source"
             >
-            <DataSourceSelector
+            <dataSourceManagement.ui.DataSourceSelector
                savedObjectsClient={savedObjects.client}
                notifications={notifications} 
                onSelectedDataSource={onSelectedDataSource}
@@ -164,7 +165,7 @@ export const SearchConfig: FunctionComponent<SearchConfigProps> = ({
                hideLocalCluster={false} 
                fullWidth={false}
                removePrepend={true}
-               dataSourceOptions={dataSourceOptions}
+               dataSourceFilter={(ds) => dataSourceOptions.some((op) => op.id === ds.id)}
             />
             </EuiFormRow>
           </EuiFlexItem> )}

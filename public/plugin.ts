@@ -11,10 +11,15 @@ import {
   AppPluginStartDependencies,
 } from './types';
 import { PLUGIN_NAME, PLUGIN_ID } from '../common';
+import { DataSourceManagementPluginSetup } from '../../../src/plugins/data_source_management/public';
+
+export interface SearchRelevancePluginSetupDependencies {
+  dataSourceManagement: DataSourceManagementPluginSetup;
+}
 
 export class SearchRelevancePlugin
   implements Plugin<SearchRelevancePluginSetup, SearchRelevancePluginStart> {
-  public setup(core: CoreSetup): SearchRelevancePluginSetup {
+  public setup(core: CoreSetup, {dataSourceManagement}: SearchRelevancePluginSetupDependencies): SearchRelevancePluginSetup {
     // Register an application into the side navigation menu
     core.application.register({
       id: PLUGIN_ID,
@@ -30,7 +35,7 @@ export class SearchRelevancePlugin
         // Get start services as specified in opensearch_dashboards.json
         const [coreStart, depsStart] = await core.getStartServices();
         // Render the application
-        return renderApp(coreStart, depsStart as AppPluginStartDependencies, params);
+        return renderApp(coreStart, depsStart as AppPluginStartDependencies, params, dataSourceManagement);
       },
     });
 

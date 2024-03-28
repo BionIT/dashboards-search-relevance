@@ -5,7 +5,7 @@
 
 import React, { useEffect } from 'react';
 import { ChromeBreadcrumb, CoreStart, MountPoint } from '../../../../../src/core/public';
-import { DataSourceManagementPluginSetup, DataSourceMenu } from '../../../../../src/plugins/data_source_management/public';
+import { DataSourceManagementPluginSetup, DataSourceViewConfig, DataSourceComponentType, DataSourceMultiSelectableConfig, DataSourceSelectableConfig } from '../../../../../src/plugins/data_source_management/public';
 import { NavigationPublicPluginStart } from '../../../../../src/plugins/navigation/public';
 import { QUERY_NUMBER_ONE, QUERY_NUMBER_TWO, ServiceEndpoints } from '../../../common';
 import '../../ace-themes/sql_console';
@@ -107,13 +107,15 @@ export const Home = ({
   }
 
   const selectedDatasources = (e) => {
+    console.log("am i selected")
     console.log(e)
-    e.forEach(item  => {
-      if (item.checked === "on" && !dataSourceOptions.find(option => option.id === item.id)) {
-          dataSourceOptions.push({ id: item.id, label: item.name });;
-      }
-    });
-    setDataSourceOptions(dataSourceOptions)
+
+    // e.forEach(item  => {
+    //   if (item.checked === "on" && !dataSourceOptions.find(option => option.id === item.id)) {
+    //       dataSourceOptions.push({ id: item.id, label: item.name });;
+    //   }
+    // });
+    setDataSourceOptions([e])
   }
 
   // Get Indexes and Pipelines
@@ -125,18 +127,33 @@ export const Home = ({
     fetchPipelines(datasource2,QUERY_NUMBER_TWO)
     
   }, [http, setDocumentsIndexes1, setDocumentsIndexes2, setFetchedPipelines1, setFetchedPipelines2, datasource1, datasource2]);
+
+  console.log(dataSourceManagement, "dataSourceManagement")
+
+  // const DataSourceMenu = dataSourceManagement.ui.DataSourceMenu;
+  
+  //const DataSourceMenu = dataSourceManagement.ui.getDataSourceMenu<DataSourceSelectableConfig>();
+  // const DataSourceMenu = dataSourceManagement.ui.getDataSourceMenu<DataSourceAggregatedViewConfig>();
+   const DataSourceMenu = dataSourceManagement.ui.getDataSourceMenu<DataSourceMultiSelectableConfig>();
+
+  console.log("should be hh")
   return (
     <>
-      <DataSourceMenu
+      {/* <DataSourceMenu
         setMenuMountPoint={setActionMenu}
-        showDataSourceMultiSelectable={true}
-        disableDataSourceSelectable={true}
         savedObjects={savedObjects.client}
         notifications={notifications}
-        appName={'searchRelevance'}
-        hideLocalCluster={false}
-        selectedDataSourcesCallBackFunc={selectedDatasources}
-        fullWidth={true}
+        componentType={'DataSourceSelectable'}
+        config={{fullWidth: true, displayedOption: [], onSelectedDataSources: () => console.log("hey")}}
+      /> */}
+
+      <DataSourceMenu
+        setMenuMountPoint={setActionMenu}
+        componentType={'DataSourceMultiSelectable'}
+        componentConfig={{fullWidth: true, savedObjects: savedObjects.client, 
+        notifications: notifications,
+        onSelectedDataSources: (dataSources) => console.log(dataSources)
+      }}
       />
       <div className="osdOverviewWrapper">
         {documentsIndexes1.length || documentsIndexes2.length ? <SearchResult http={http} savedObjects={savedObjects} dataSourceEnabled={datasourceEnabled} dataSourceManagement={dataSourceManagement} navigation={navigation} setActionMenu={setActionMenu} /> : <CreateIndex />}

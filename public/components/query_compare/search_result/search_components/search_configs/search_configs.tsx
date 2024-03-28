@@ -48,6 +48,7 @@ export const SearchConfigsPanel = ({
   setActionMenu,
   navigation,
 }: SearchConfigsPanelProps) => {
+  console.log(dataSourceManagement)
   const {
     selectedIndex1,
     setSelectedIndex1,
